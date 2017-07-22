@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Node __nodeKind="groupNode">
+  <head __nodeKind="contentNode">
+  </head>
+  <Data __nodeKind="groupNode">
+    <Node __nodeKind="contentNode" __ReflectValue="5号楼-生命科学学院" __Value="5#SMKXY">
+      <Node __nodeKind="contentNode" __ReflectValue="6号楼" __Value="6#JXL">
+      </Node>
+      <Node __nodeKind="contentNode" __ReflectValue="6号楼" __Value="6#">
+      </Node>
+      <Node __nodeKind="contentNode" __ReflectValue="7号楼" __Value="7#JXL">
+      </Node>
+      <Node __nodeKind="contentNode" __ReflectValue="9号楼" __Value="9#WLL">
+      </Node>
+    </Node>
+    <Node __nodeKind="contentNode" __ReflectValue="行政楼" __Value="4#XZL">
+    </Node>
+    <Node __nodeKind="contentNode" __ReflectValue="行政楼副楼" __Value="4#XZLFL">
+    </Node>
+    <Node __nodeKind="contentNode" __ReflectValue="纳米楼" __Value="NML">
+    </Node>
+    <Node __nodeKind="contentNode" __ReflectValue="博雅广场" __Value="BYGC">
+    </Node>
+    <Test __nodeKind="contentNode" __ReflectValue="东二学生宿舍" __Value="X2SS">
+    </Test>
+    <Node __nodeKind="contentNode" __ReflectValue="田家炳楼" __Value="TJB">
+    </Node>
+    <Node __nodeKind="contentNode" __ReflectValue="东四学生宿舍" __Value="X4SS">123</Node>
+  </Data>
+</Node>
