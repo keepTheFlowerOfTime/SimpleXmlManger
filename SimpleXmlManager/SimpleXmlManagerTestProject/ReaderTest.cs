@@ -28,7 +28,7 @@ namespace SimpleXmlManagerTestProject
         public void TestReadFile()
         {
             SimpleXmlManager manager = new SimpleXmlManager();
-            var node = manager.Read("locationReflect.xml");
+            var node = manager.Read("locationReflect.xml","Data");
             Console.WriteLine(node.Name);
             foreach (var pair in node.Attributes) Console.WriteLine(string.Format("{0}:{1}", pair.Key, pair.Value));
             if (node.IsGroupNode)
@@ -92,6 +92,18 @@ namespace SimpleXmlManagerTestProject
                 Content = "测试值",
             });
             doc.Write(outputPath);
+        }
+
+        [TestMethod]
+        public void TestReadAndRelease()
+        {
+            string filePath = @"E:\code_file\project_file\myLib\AnalyzeClientTestProject\bin\Debug\dict\893136600\L\length_8.xml";
+            Document documentA = Document.ReadAllFrom(filePath);
+            Document documentB = Document.ReadAllFrom(filePath);
+            documentA.ReleaseData();
+            documentB.ReleaseData();
+            GC.Collect();
+            System.Threading.Thread.Sleep(3000);
         }
 
         private void ShowAttri(INode node)

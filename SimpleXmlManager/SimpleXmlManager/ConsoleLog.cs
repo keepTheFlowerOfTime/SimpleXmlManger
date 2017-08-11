@@ -12,7 +12,7 @@ namespace MyLib.Xml
 {
     public static class ConsoleLog
     {
-        static bool s_flag = true;
+        static bool s_flag = false;
         public static void Close()
         {
             s_flag = false;

@@ -51,7 +51,8 @@ namespace MyLib.Xml.Internal
             return ReadNodeProcess(filePath, nodeName);
         }
 
-        protected ReadContext ReadNodeProcess(string filePath,string nodeName)
+
+        protected ReadContext ReadNodeProcess(string filePath, string nodeName)
         {
             FileStream stream = new FileStream(filePath, FileMode.Open);
             System.Xml.XmlTextReader reader = new System.Xml.XmlTextReader(stream);
@@ -62,6 +63,7 @@ namespace MyLib.Xml.Internal
             else reader.ReadToFollowing(nodeName);
             do
             {
+                int nowDepth = reader.Depth;
                 switch (reader.NodeType)
                 {
                     case System.Xml.XmlNodeType.Element:
@@ -71,11 +73,19 @@ namespace MyLib.Xml.Internal
                         {
                             readArgs.Type = XmlNodeType.Group;
                             ReadSingleNodeStart?.Invoke(context, readArgs);
+                            if (reader.Depth == context.PreviousDepth && readArgs.Name == nodeName)
+                            {
+                                readIsFinish = true;
+                                context.PopParentNode();
+                                break;
+                            }
+
                         }
 
                         readArgs = new ReadArgs();
                         context.NodeIsEnd = ReadElement(reader, readArgs, context);
                         context.PreviousNodeType = System.Xml.XmlNodeType.Element;
+                        context.PreviousDepth = nowDepth;
                         break;
                     case System.Xml.XmlNodeType.Text:
                         ConsoleLog.WriteLine(System.Xml.XmlNodeType.Text + "-" + reader.Name);
@@ -84,6 +94,7 @@ namespace MyLib.Xml.Internal
                         ReadSingleNodeStart?.Invoke(context, readArgs);
                         context.NodeIsEnd = ReadText(reader, readArgs, context);
                         context.PreviousNodeType = System.Xml.XmlNodeType.Text;
+                        context.PreviousDepth = nowDepth;
                         break;
                     case System.Xml.XmlNodeType.EndElement:
                         ConsoleLog.WriteLine(System.Xml.XmlNodeType.EndElement + "-" + reader.Name);
@@ -99,6 +110,7 @@ namespace MyLib.Xml.Internal
                         if (reader.Name == nodeName) readIsFinish = true;
                         readArgs = new ReadArgs();
                         context.PreviousNodeType = System.Xml.XmlNodeType.EndElement;
+                        context.PreviousDepth = nowDepth;
                         break;
                 }
                 if (readIsFinish) break;
@@ -162,7 +174,7 @@ namespace MyLib.Xml.Internal
         }
     }
 
-    
 
-    
+
+
 }

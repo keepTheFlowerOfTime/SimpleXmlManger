@@ -32,6 +32,17 @@ namespace MyLib.Xml.Internal
             }
         }
 
+        public IXmlAttribute this[string key]
+        {
+            get
+            {
+                return m_attributes.Find((attri) =>
+                {
+                    return attri.Key == key;
+                });
+            }          
+        }
+
         public int Count
         {
             get

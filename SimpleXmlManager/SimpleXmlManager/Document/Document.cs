@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -16,7 +17,7 @@ namespace MyLib.Xml.Document
     public class Document
     {
         #region 静态构造方法
-        public static Document NewDocument(BaseDocumentHead head,BaseDocumentData data)
+        public static Document NewDocument(BaseDocumentHead head, BaseDocumentData data)
         {
             Document doc = new Document(head, data);
             doc.Read(null);
@@ -33,28 +34,33 @@ namespace MyLib.Xml.Document
         public static Document ReadHeadFrom(string filePath)
         {
             Document doc = new Document();
-            doc.ReadHead(filePath);
+            if (File.Exists(filePath)) doc.ReadHead(filePath);
+            else doc.Read(null);
             return doc;
         }
 
-        public static Document ReadHeadFrom(BaseDocumentHead head,BaseDocumentData data,string filePath)
+        public static Document ReadHeadFrom(BaseDocumentHead head, BaseDocumentData data, string filePath)
         {
             Document doc = new Document(head, data);
-            doc.ReadHead(filePath);
+            if (File.Exists(filePath)) doc.ReadHead(filePath);
+            else doc.Read(null);
             return doc;
         }
 
-        public static Document ReadAllFrom(BaseDocumentHead head,BaseDocumentData data,string filePath)
+        public static Document ReadAllFrom(BaseDocumentHead head, BaseDocumentData data, string filePath)
         {
             Document doc = new Document(head, data);
-            doc.Read(filePath);
+            if (File.Exists(filePath)) doc.Read(filePath);
+            else doc.Read(null);
             return doc;
         }
 
         public static Document ReadAllFrom(string filePath)
         {
             Document doc = new Document();
-            doc.Read(filePath);
+            if (File.Exists(filePath))
+                doc.Read(filePath);
+            else doc.Read(null);
             return doc;
         }
         #endregion
@@ -70,40 +76,64 @@ namespace MyLib.Xml.Document
             m_data = data;
         }
 
-        protected Document():this(new DefaultDocumentHead()
-            ,new DefaultDocumentData()
+        protected Document() : this(new DefaultDocumentHead()
+            , new DefaultDocumentData()
             )
         {
 
         }
 
+        /// <summary>
+        /// 从该路径中读取符合一定格式的xml文件，如对节点名存在要求
+        /// </summary>
+        /// <param name="filePath"></param>
         public void Read(string filePath)
         {
             ReadHead(filePath);
             ReadData(filePath);
         }
 
+        /// <summary>
+        /// 从该路径中读取符合一定格式的xml文件的Data节点
+        /// </summary>
+        /// <param name="filePath"></param>
         public void ReadData(string filePath)
         {
             Data.Read(filePath);
         }
 
+        /// <summary>
+        /// 从该路径中读取符合一定格式的xml文件的Head的节点
+        /// </summary>
+        /// <param name="filePath"></param>
         public void ReadHead(string filePath)
         {
             Head.Read(filePath);
         }
 
+        /// <summary>
+        /// 解除Data节点对内存的占用，不会情况其属性
+        /// </summary>
         public void ReleaseData()
         {
             Data.Release();
         }
 
+        /// <summary>
+        /// 将Document的信息写到指定的路径，根节点采用默认名
+        /// </summary>
+        /// <param name="filePath"></param>
         public void Write(string filePath)
         {
             Write(filePath, DEFAULT_ROOT_NODE_NAME);
         }
 
-        public void Write(string filePath,string rootNodeName)
+        /// <summary>
+        /// 将Document的信息写到指定的路径，根节点采用指定名
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="rootNodeName"></param>
+        public void Write(string filePath, string rootNodeName)
         {
             IGroupNode rootNode = new DefaultGroupNode();
             rootNode.Name = rootNodeName;
@@ -112,6 +142,9 @@ namespace MyLib.Xml.Document
             SimpleXmlManager.Default.Write(rootNode, filePath);
         }
 
+        /// <summary>
+        /// Document的Data节点
+        /// </summary>
         public BaseDocumentData Data
         {
             get
@@ -120,6 +153,9 @@ namespace MyLib.Xml.Document
             }
         }
 
+        /// <summary>
+        /// Document的Head节点
+        /// </summary>
         public BaseDocumentHead Head
         {
             get

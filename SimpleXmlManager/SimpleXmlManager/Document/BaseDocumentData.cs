@@ -13,28 +13,31 @@ namespace MyLib.Xml.Document
     public abstract class BaseDocumentData : IDocumentNode
     {
         public const string DEFAULT_NAME = "Data";
-        SimpleXmlManager m_xmlManager;
         string m_name;
         IGroupNode m_items;
+        INodeFactory m_nodeFactory;
         public BaseDocumentData(INodeFactory nodeFactory)
         {
-            m_xmlManager = new SimpleXmlManager(nodeFactory);
+            m_nodeFactory = nodeFactory;
         }
 
         public void Read(string filePath)
         {
             if (filePath == null)
             {
-                m_items = m_xmlManager.GroupNodeCreateHandle(new Internal.ReadArgs());
+                m_items = m_nodeFactory.CreateGroupNodeFromData(new Internal.ReadArgs());
                 m_items.Name = DEFAULT_NAME;
             }
             else
-                m_items = m_xmlManager.Read(filePath, Name) as IGroupNode;
+            {
+
+                m_items = new SimpleXmlManager(m_nodeFactory).Read(filePath,Name) as IGroupNode;
+            }
         }
 
         public void Release()
         {
-            m_items.ChildNodes.Clear();
+            m_items.RemoveAll();
         }
 
         public void Close()
@@ -54,6 +57,16 @@ namespace MyLib.Xml.Document
             {
                 m_name = value;
             }
+        }
+
+        public void Sort(Comparison<INode> comparision)
+        {
+            m_items.ChildNodes.Sort(comparision);
+        }
+
+        public void Sort(Action<ICollection<INode>> sortHandle)
+        {
+            m_items.ChildNodes.Sort(sortHandle);
         }
 
         public IGroupNode Items

@@ -34,6 +34,25 @@ namespace MyLib.Xml
             m_collection.Clear();
         }
 
+        /// <summary>
+        /// if collection is List,then Sort,else throw NotSupportException
+        /// </summary>
+        /// <param name="comparision"></param>
+        internal void Sort(Comparison<INode> comparision)
+        {
+            if (m_collection is List<INode>) (m_collection as List<INode>).Sort(comparision);
+            else throw new NotSupportedException("Not Support Function");
+        }
+
+        /// <summary>
+        /// 使用sortHandle方法对Collection进行排序
+        /// </summary>
+        /// <param name="sortHandle"></param>
+        public void Sort(Action<ICollection<INode>> sortHandle)
+        {
+            sortHandle(m_collection);
+        }
+
         public IEnumerator<INode> GetEnumerator()
         {
             return m_collection.GetEnumerator();

@@ -43,6 +43,12 @@ namespace MyLib.Xml.Internal
             }
         }
 
+        internal int PreviousDepth
+        {
+            get;
+            set;
+        }
+
         public INode RootNode
         {
             get;

@@ -15,26 +15,26 @@ namespace MyLib.Xml.Document
         public const string DEFAULT_NAME = "Head";
         IGroupNode m_items;
         string m_name;
-        SimpleXmlManager m_xmlManager;
+        INodeFactory m_nodeFactory;
         public BaseDocumentHead(INodeFactory nodeFactory)
         {
-            m_xmlManager = new SimpleXmlManager(nodeFactory);
+            m_nodeFactory = nodeFactory;
         }
 
         public void Read(string filePath)
         {
             if (filePath == null)
             {
-                m_items = m_xmlManager.GroupNodeCreateHandle(new Internal.ReadArgs());
+                m_items = m_nodeFactory.CreateGroupNodeFromData(new Internal.ReadArgs());
                 m_items.Name = DEFAULT_NAME;
             }
             else
-                m_items = m_xmlManager.Read(filePath, Name) as IGroupNode;
+                m_items = new SimpleXmlManager(m_nodeFactory).Read(filePath, Name) as IGroupNode;
         }
 
         public void Release()
         {
-            (m_items as IGroupNode)?.ChildNodes.Clear();
+            (m_items as IGroupNode)?.RemoveAll();
         }
 
         public void Close()

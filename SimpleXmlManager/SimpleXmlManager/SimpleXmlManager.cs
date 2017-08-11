@@ -36,7 +36,7 @@ namespace MyLib.Xml
         {
             m_xmlReader = new XmlReader();
             m_xmlReader.ReadSingleNodeEnd += OnReadNodeEnd;
-            m_xmlReader.ReadSingleNodeStart+= OnReadNodeStart;
+            m_xmlReader.ReadSingleNodeStart += OnReadNodeStart;
             m_xmlWriter = new XmlWriter();
 
             RootNodeCreateHandle = factory.CreateRootNodeFromData;
@@ -62,7 +62,9 @@ namespace MyLib.Xml
             if (filePath == null) return RootNodeCreateHandle(new ReadArgs());
             try
             {
-                return m_xmlReader.Read(filePath).RootNode as IGroupNode;
+                INode root = m_xmlReader.Read(filePath).RootNode as IGroupNode;
+                m_previousReadNode = null;
+                return root;
             }
             catch (System.IO.DirectoryNotFoundException)
             {
@@ -93,7 +95,9 @@ namespace MyLib.Xml
         /// <returns></returns>
         public INode Read(string filePath, string nodeName)
         {
-            return m_xmlReader.ReadNode(filePath, nodeName).RootNode;
+            INode root = m_xmlReader.ReadNode(filePath, nodeName).RootNode;
+            m_previousReadNode = null;
+            return root;
         }
 
 
